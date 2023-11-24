@@ -1,0 +1,39 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python: Current File",
+			"type": "python",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		},
+		{
+			"name": "attack",
+			"type": "python",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": false,
+			"cwd": "/home/liao.629/llm-attacks/experiments",
+			"env": {
+				"WANDB_MODE": "disabled"
+			},
+			"args": [
+				"--config=configs/individual_llama2.py",
+				"--config.attack=gcg",
+				"--config.train_data=../data/advbench/harmful_behaviors.csv",
+				"--config.result_prefix=results/individual_behaviors_llama2_gcg_offset0",
+				"--config.n_train_data=10",
+				"--config.data_offset=0",
+				"--config.n_steps=1000",
+				"--config.test_steps=250",
+				"--config.batch_size=256"
+			]
+		}
+	]
+}

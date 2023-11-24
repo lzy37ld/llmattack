@@ -19,7 +19,7 @@ else
     echo "Folder '../results' already exists."
 fi
 
-for data_offset in 110 120 130 140 150 160 170 180 190
+for data_offset in 120 130 140 150 160 170 180 190
 # for data_offset in 160 170 180 190
 do
 

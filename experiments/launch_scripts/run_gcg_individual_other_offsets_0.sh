@@ -19,7 +19,7 @@ else
     echo "Folder '../results' already exists."
 fi
 
-for data_offset in 10 20 30 40 50 60 70 80 90
+for data_offset in 20
 do
 
 # n_steps=1000 is too time consuming.. try 100 first. Look at figure 2 in the paper

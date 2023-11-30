@@ -49,5 +49,6 @@ def get_config():
     config.filter_cand = True
 
     config.gbda_deterministic = True
-
+    config.multi_constant = 1
+    
     return config

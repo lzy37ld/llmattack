@@ -21,7 +21,9 @@
 			"justMyCode": false,
 			"cwd": "/home/liao.629/llm-attacks/experiments",
 			"env": {
-				"WANDB_MODE": "disabled"
+				"WANDB_MODE": "disabled",
+				"CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+				"CUDA_VISIBLE_DEVICES": "2"
 			},
 			"args": [
 				"--config=configs/individual_llama2.py",
@@ -31,8 +33,9 @@
 				"--config.n_train_data=10",
 				"--config.data_offset=0",
 				"--config.n_steps=1000",
-				"--config.test_steps=250",
-				"--config.batch_size=256"
+				"--config.test_steps=1",
+				"--config.batch_size=256",
+				"--config.multi_constant=2"
 			]
 		}
 	]

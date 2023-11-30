@@ -7,6 +7,7 @@
 #SBATCH --time 3:00:00               # maximum execution time (HH:MM:SS)
 #SBATCH --output=%x-%j.out           # output file name
 export offset=$1
+export multi_constant=$2
 
 
 # wrong

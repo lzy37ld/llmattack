@@ -1,30 +1,33 @@
 # !/bin/bash
 
 
-# for i in $(seq 440 20 500)
-# do
-#    sbatch run.slurm $i
-# done
+multi_constant=0
 
-# for i in $(seq 340 20 380)
-# do
-#    sbatch run.slurm $i
-# done
+for i in $(seq 440 10 510)
+do
+   sbatch run.slurm $i $multi_constant
+done
 
-# for i in $(seq 240 20 280)
-# do
-#    sbatch run.slurm $i
-# done
+for i in $(seq 340 10 390)
+do
+   sbatch run.slurm $i $multi_constant
+done
 
-# for i in $(seq 140 20 180)
-# do
-#    sbatch run.slurm $i
-# done
+for i in $(seq 240 10 290)
+do
+   sbatch run.slurm $i $multi_constant
+done
 
-# for i in $(seq 40 20 80)
-# do
-#    sbatch run.slurm $i
-# done
+for i in $(seq 140 10 190)
+do
+   sbatch run.slurm $i $multi_constant
+done
+
+for i in $(seq 40 10 90)
+do
+   sbatch run.slurm $i $multi_constant
+done
+
 
 
 # # Nov 25 5:10 AM

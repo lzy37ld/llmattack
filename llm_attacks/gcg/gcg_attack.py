@@ -72,7 +72,7 @@ def token_gradients(model, input_ids, input_slice, target_slice, loss_slice,test
     safe_prefixes_tokens[safe_prefixes_tokens == t.pad_token_id] = -100
     stacked_logits = logits[0,loss_slice,:].unsqueeze(0).repeat(safe_prefixes_tokens.shape[0],1,1)
     loss_2 = loss_fn(stacked_logits.view(-1,stacked_logits.shape[-1]), safe_prefixes_tokens.view(-1))
-    loss = loss_1 + multi_constant * loss_2
+    loss = loss_1 - multi_constant * loss_2
     
     loss.backward()
     return one_hot.grad.clone()

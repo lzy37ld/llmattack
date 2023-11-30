@@ -30,7 +30,7 @@ python -u ../main.py \
     --config.data_offset=$data_offset \
     --config.n_steps=1000 \
     --config.test_steps=250 \
-    --config.batch_size=512 \
+    --config.batch_size=256 \
     --config.multi_constant=$multi_constant
 
 

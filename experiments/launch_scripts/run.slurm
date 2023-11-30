@@ -15,7 +15,7 @@ export multi_constant=$2
 
 # correct
 # n_train_data=10
-srun --jobid $SLURM_JOBID bash -c 'bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset & bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset+10 & wait'
+srun --jobid $SLURM_JOBID bash -c 'bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset $multi_constant & bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset+10 $multi_constant & wait'
 
 
 # 一个 set n_train_data = 1

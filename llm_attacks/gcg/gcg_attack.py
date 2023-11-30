@@ -7,9 +7,11 @@ from tqdm.auto import tqdm
 
 from llm_attacks import AttackPrompt, MultiPromptAttack, PromptManager
 from llm_attacks import get_embedding_matrix, get_embeddings
+from transformers import AutoTokenizer
+t = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-chat-hf")
+t.pad_token = t.eos_token
 
-
-def token_gradients(model, input_ids, input_slice, target_slice, loss_slice):
+def token_gradients(model, input_ids, input_slice, target_slice, loss_slice,test_prefixes, multi_constant):
 
     """
     Computes gradients of the loss with respect to the coordinates.
@@ -60,10 +62,19 @@ def token_gradients(model, input_ids, input_slice, target_slice, loss_slice):
     
     logits = model(inputs_embeds=full_embeds).logits
     targets = input_ids[target_slice]
-    loss = nn.CrossEntropyLoss()(logits[0,loss_slice,:], targets)
+    loss_fn = nn.CrossEntropyLoss()
+    # original
+    loss_1 = loss_fn(logits[0,loss_slice,:], targets)
+    # loss = nn.CrossEntropyLoss(reduction="none")(logits[0,loss_slice,:], targets)
+    # loss[:,:3] *= 3
+    # loss = 
+    safe_prefixes_tokens = t(test_prefixes,padding = "max_length",return_tensors="pt",add_special_tokens= False, max_length = targets.shape[0]).input_ids.to(targets.device)
+    safe_prefixes_tokens[safe_prefixes_tokens == t.pad_token_id] = -100
+    stacked_logits = logits[0,loss_slice,:].unsqueeze(0).repeat(safe_prefixes_tokens.shape[0],1,1)
+    loss_2 = loss_fn(stacked_logits.view(-1,stacked_logits.shape[-1]), safe_prefixes_tokens.view(-1))
+    loss = loss_1 + multi_constant * loss_2
     
     loss.backward()
-    
     return one_hot.grad.clone()
 
 class GCGAttackPrompt(AttackPrompt):
@@ -78,7 +89,9 @@ class GCGAttackPrompt(AttackPrompt):
             self.input_ids.to(model.device), 
             self._control_slice, 
             self._target_slice, 
-            self._loss_slice
+            self._loss_slice,
+            self.test_prefixes,
+            self.multi_constant
         )
 
 class GCGPromptManager(PromptManager):
@@ -122,7 +135,8 @@ class GCGMultiPromptAttack(MultiPromptAttack):
              allow_non_ascii=True, 
              target_weight=1, 
              control_weight=0.1, 
-             verbose=False, 
+             verbose=False,
+             test_prefixes = [],
              opt_only=False,
              filter_cand=True):
 

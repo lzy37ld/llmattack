@@ -29,7 +29,7 @@ python -u ../main.py \
     --config.data_offset=$data_offset \
     --config.n_steps=1000 \
     --config.test_steps=250 \
-    --config.batch_size=512
+    --config.batch_size=256
 
 
 # # n_steps=1000 is too time consuming.. try 100 first. Look at figure 2 in the paper

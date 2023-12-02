@@ -16,6 +16,7 @@ from fastchat.model import get_conversation_template
 from transformers import (AutoModelForCausalLM, AutoTokenizer, GPT2LMHeadModel,
                           GPTJForCausalLM, GPTNeoXForCausalLM,
                           LlamaForCausalLM)
+from collections import defaultdict as ddict
 
 
 class NpEncoder(json.JSONEncoder):
@@ -693,7 +694,8 @@ class MultiPromptAttack(object):
                      runtime, 
                      model_tests, 
                      verbose=verbose)
-
+            
+        step_d = ddict(list)
         for i in range(n_steps):
             
             if stop_on_success:
@@ -704,7 +706,7 @@ class MultiPromptAttack(object):
             steps += 1
             start = time.time()
             torch.cuda.empty_cache()
-            control, loss = self.step(
+            control, loss, control_cands, loss_cands = self.step(
                 batch_size=batch_size, 
                 topk=topk, 
                 temp=temp, 
@@ -715,6 +717,13 @@ class MultiPromptAttack(object):
                 verbose=verbose,
                 test_prefixes = self.test_prefixes
             )
+            
+            dict_cands_l = []
+            for _i in range(len(control_cands[0])):
+                dict_cands_l.append(dict(control = control_cands[0][_i], loss = loss_cands[_i].item()))
+            step_d[f"step_{i}"] = dict_cands_l
+            # loss might not be a good indicator, so I would log the new control whatever the loss is.
+            # But in order to converge, we still use the last best control to optimize...
             runtime = time.time() - start
             keep_control = True if not anneal else P(prev_loss, loss, i+anneal_from)
             if keep_control:
@@ -732,7 +741,7 @@ class MultiPromptAttack(object):
 
                 # model_tests = self.test_all()
                 model_tests = None
-                self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose)
+                self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose, step_d = step_d)
 
                 self.control_str = last_control
 
@@ -778,7 +787,7 @@ class MultiPromptAttack(object):
         od_od = results[x:, i:].sum()
         return id_id, id_od, od_id, od_od
 
-    def log(self, step_num, n_steps, control, loss, runtime, model_tests = None, verbose=True):
+    def log(self, step_num, n_steps, control, loss, runtime, model_tests = None, verbose=True, step_d = None):
 
         # prompt_tests_jb, prompt_tests_mb, model_tests_loss = list(map(np.array, model_tests))
         # all_goal_strs = self.goals + self.test_goals
@@ -803,16 +812,28 @@ class MultiPromptAttack(object):
         # tests['n_loss'] = n_loss
         # tests['total'] = total_tests
 
+        # control_cands_d = {
+        #     all_goal_strs[i]:
+        #     [
+        #         (all_workers[j].model.name_or_path, prompt_tests_jb[j][i], prompt_tests_mb[j][i], model_tests_loss[j][i])
+        #         for j in range(len(all_workers))
+        #     ]
+        #     for i in range(len(all_goal_strs))
+        # }
+
         with open(self.logfile, 'r') as f:
             log = json.load(f)
 
         log['controls'].append(control)
         log['losses'].append(loss)
-        log['runtimes'].append(runtime)
-        # log['tests'].append(tests)
+        if step_d is not None:
+            log_step_d = {}
+            assert len(self.goals) == 1
+            log['steps_cands'][self.goals[0]] = step_d
 
         with open(self.logfile, 'w') as f:
             json.dump(log, f, indent=4, cls=NpEncoder)
+
 
         # if verbose:
         #     output_str = ''
@@ -924,6 +945,7 @@ class ProgressiveMultiPromptAttack(object):
                         'controls': [],
                         'losses': [],
                         'runtimes': [],
+                        'steps_cands': {},
                         'tests': []
                     }, f, indent=4
                 )
@@ -1165,6 +1187,7 @@ class IndividualPromptAttack(object):
                         'controls': [],
                         'losses': [],
                         'runtimes': [],
+                        'steps_cands': {},
                         'tests': []
                     }, f, indent=4
                 )
@@ -1372,6 +1395,7 @@ class EvaluateAttack(object):
                         'controls': [],
                         'losses': [],
                         'runtimes': [],
+                        'steps_cands': {},
                         'tests': []
                     }, f, indent=4
                 )

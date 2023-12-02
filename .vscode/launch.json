@@ -35,7 +35,7 @@
 				"--config.n_steps=1000",
 				"--config.test_steps=1",
 				"--config.batch_size=256",
-				"--config.multi_constant=2"
+				"--config.multi_constant=0"
 			]
 		}
 	]

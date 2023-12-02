@@ -65,15 +65,17 @@ def token_gradients(model, input_ids, input_slice, target_slice, loss_slice,test
     loss_fn = nn.CrossEntropyLoss()
     # original
     loss_1 = loss_fn(logits[0,loss_slice,:], targets)
-    # loss = nn.CrossEntropyLoss(reduction="none")(logits[0,loss_slice,:], targets)
-    # loss[:,:3] *= 3
-    # loss = 
-    safe_prefixes_tokens = t(test_prefixes,padding = "max_length",return_tensors="pt",add_special_tokens= False, max_length = targets.shape[0]).input_ids.to(targets.device)
-    safe_prefixes_tokens[safe_prefixes_tokens == t.pad_token_id] = -100
-    stacked_logits = logits[0,loss_slice,:].unsqueeze(0).repeat(safe_prefixes_tokens.shape[0],1,1)
-    loss_2 = loss_fn(stacked_logits.view(-1,stacked_logits.shape[-1]), safe_prefixes_tokens.view(-1))
-    loss = loss_1 - multi_constant * loss_2
     
+    # add space! Due to it's generation.
+    # test_prefixes = [" " + _ for _ in test_prefixes]
+    loss = loss_1
+    if multi_constant > 0:
+        safe_prefixes_tokens = t(test_prefixes,padding = "max_length",return_tensors="pt",add_special_tokens= False, max_length = targets.shape[0]).input_ids.to(targets.device)
+        safe_prefixes_tokens[safe_prefixes_tokens == t.pad_token_id] = -100
+        stacked_logits = logits[0,loss_slice,:].unsqueeze(0).repeat(safe_prefixes_tokens.shape[0],1,1)
+        loss_2 = loss_fn(stacked_logits.view(-1,stacked_logits.shape[-1]), safe_prefixes_tokens.view(-1))
+        loss = loss_1 - multi_constant * loss_2
+        
     loss.backward()
     return one_hot.grad.clone()
 

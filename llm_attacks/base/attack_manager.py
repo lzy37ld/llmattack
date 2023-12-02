@@ -684,7 +684,8 @@ class MultiPromptAttack(object):
         runtime = 0.
 
         if self.logfile is not None and log_first:
-            model_tests = self.test_all()
+            # model_tests = self.test_all()
+            model_tests = None
             self.log(anneal_from, 
                      n_steps+anneal_from, 
                      self.control_str, 
@@ -729,7 +730,8 @@ class MultiPromptAttack(object):
                 last_control = self.control_str
                 self.control_str = best_control
 
-                model_tests = self.test_all()
+                # model_tests = self.test_all()
+                model_tests = None
                 self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose)
 
                 self.control_str = last_control
@@ -776,29 +778,30 @@ class MultiPromptAttack(object):
         od_od = results[x:, i:].sum()
         return id_id, id_od, od_id, od_od
 
-    def log(self, step_num, n_steps, control, loss, runtime, model_tests, verbose=True):
+    def log(self, step_num, n_steps, control, loss, runtime, model_tests = None, verbose=True):
 
-        prompt_tests_jb, prompt_tests_mb, model_tests_loss = list(map(np.array, model_tests))
-        all_goal_strs = self.goals + self.test_goals
-        all_workers = self.workers + self.test_workers
-        tests = {
-            all_goal_strs[i]:
-            [
-                (all_workers[j].model.name_or_path, prompt_tests_jb[j][i], prompt_tests_mb[j][i], model_tests_loss[j][i])
-                for j in range(len(all_workers))
-            ]
-            for i in range(len(all_goal_strs))
-        }
-        n_passed = self.parse_results(prompt_tests_jb)
-        n_em = self.parse_results(prompt_tests_mb)
-        n_loss = self.parse_results(model_tests_loss)
-        total_tests = self.parse_results(np.ones(prompt_tests_jb.shape, dtype=int))
-        n_loss = [l / t if t > 0 else 0 for l, t in zip(n_loss, total_tests)]
+        # prompt_tests_jb, prompt_tests_mb, model_tests_loss = list(map(np.array, model_tests))
+        # all_goal_strs = self.goals + self.test_goals
+        # all_workers = self.workers + self.test_workers
+        # tests = {
+        #     all_goal_strs[i]:
+        #     [
+        #         (all_workers[j].model.name_or_path, prompt_tests_jb[j][i], prompt_tests_mb[j][i], model_tests_loss[j][i])
+        #         for j in range(len(all_workers))
+        #     ]
+        #     for i in range(len(all_goal_strs))
+        # }
+        # tests = {}
+        # n_passed = self.parse_results(prompt_tests_jb)
+        # n_em = self.parse_results(prompt_tests_mb)
+        # n_loss = self.parse_results(model_tests_loss)
+        # total_tests = self.parse_results(np.ones(prompt_tests_jb.shape, dtype=int))
+        # n_loss = [l / t if t > 0 else 0 for l, t in zip(n_loss, total_tests)]
 
-        tests['n_passed'] = n_passed
-        tests['n_em'] = n_em
-        tests['n_loss'] = n_loss
-        tests['total'] = total_tests
+        # tests['n_passed'] = n_passed
+        # tests['n_em'] = n_em
+        # tests['n_loss'] = n_loss
+        # tests['total'] = total_tests
 
         with open(self.logfile, 'r') as f:
             log = json.load(f)
@@ -806,23 +809,23 @@ class MultiPromptAttack(object):
         log['controls'].append(control)
         log['losses'].append(loss)
         log['runtimes'].append(runtime)
-        log['tests'].append(tests)
+        # log['tests'].append(tests)
 
         with open(self.logfile, 'w') as f:
             json.dump(log, f, indent=4, cls=NpEncoder)
 
-        if verbose:
-            output_str = ''
-            for i, tag in enumerate(['id_id', 'id_od', 'od_id', 'od_od']):
-                if total_tests[i] > 0:
-                    output_str += f"({tag}) | Passed {n_passed[i]:>3}/{total_tests[i]:<3} | EM {n_em[i]:>3}/{total_tests[i]:<3} | Loss {n_loss[i]:.4f}\n"
-            print((
-                f"\n====================================================\n"
-                f"Step {step_num:>4}/{n_steps:>4} ({runtime:.4} s)\n"
-                f"{output_str}"
-                f"control='{control}'\n"
-                f"====================================================\n"
-            ))
+        # if verbose:
+        #     output_str = ''
+        #     for i, tag in enumerate(['id_id', 'id_od', 'od_id', 'od_od']):
+        #         if total_tests[i] > 0:
+        #             output_str += f"({tag}) | Passed {n_passed[i]:>3}/{total_tests[i]:<3} | EM {n_em[i]:>3}/{total_tests[i]:<3} | Loss {n_loss[i]:.4f}\n"
+        #     print((
+        #         f"\n====================================================\n"
+        #         f"Step {step_num:>4}/{n_steps:>4} ({runtime:.4} s)\n"
+        #         f"{output_str}"
+        #         f"control='{control}'\n"
+        #         f"====================================================\n"
+        #     ))
 
 class ProgressiveMultiPromptAttack(object):
     """A class used to manage multiple progressive prompt-based attacks."""
@@ -1052,7 +1055,8 @@ class ProgressiveMultiPromptAttack(object):
                     num_workers += 1
                     loss = np.infty
                 elif num_workers == len(self.workers) and stop_on_success:
-                    model_tests = attack.test_all()
+                    # model_tests = attack.test_all()
+                    model_tests = None
                     attack.log(step, n_steps, self.control, loss, 0., model_tests, verbose=verbose)
                     break
                 else:

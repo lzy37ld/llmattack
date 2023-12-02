@@ -203,9 +203,11 @@ class GCGMultiPromptAttack(MultiPromptAttack):
             batch_idx = min_idx % batch_size
             next_control, cand_loss = control_cands[model_idx][batch_idx], loss[min_idx]
         
-        del control_cands, loss ; gc.collect()
+        # del control_cands, loss ; gc.collect()
+        # TODO:
+        gc.collect()
 
         print('Current length:', len(self.workers[0].tokenizer(next_control).input_ids[1:]))
         print(next_control)
 
-        return next_control, cand_loss.item() / len(self.prompts[0]) / len(self.workers)
+        return next_control, cand_loss.item() / len(self.prompts[0]) / len(self.workers), control_cands, loss

@@ -50,27 +50,33 @@
 
 multi_constant=1
 
-for i in $(seq 400 10 510)
+for i in $(seq 400 20 500)
 do
    sbatch run.slurm $i $multi_constant
 done
 
-for i in $(seq 300 10 390)
+for i in $(seq 300 20 380)
 do
    sbatch run.slurm $i $multi_constant
 done
 
-for i in $(seq 200 10 290)
+for i in $(seq 200 20 280)
 do
    sbatch run.slurm $i $multi_constant
 done
 
-for i in $(seq 100 10 190)
+for i in $(seq 100 20 180)
 do
    sbatch run.slurm $i $multi_constant
 done
 
-for i in $(seq 0 10 90)
+for i in $(seq 0 20 80)
 do
    sbatch run.slurm $i $multi_constant
 done
+
+
+# sbatch run.slurm 360 1
+# sbatch run.slurm 380 1
+# sbatch run_indiv.slurm 400 1
+# sbatch run_indiv.slurm 100 1

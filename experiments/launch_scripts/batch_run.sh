@@ -48,7 +48,7 @@
 
 
 
-multi_constant=1
+multi_constant=0
 
 for i in $(seq 400 20 500)
 do

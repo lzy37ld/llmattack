@@ -696,6 +696,7 @@ class MultiPromptAttack(object):
                      verbose=verbose)
             
         step_d = ddict(list)
+        self.step_d = step_d
         for i in range(n_steps):
             
             if stop_on_success:
@@ -721,7 +722,7 @@ class MultiPromptAttack(object):
             dict_cands_l = []
             for _i in range(len(control_cands[0])):
                 dict_cands_l.append(dict(control = control_cands[0][_i], loss = loss_cands[_i].item()))
-            step_d[f"step_{i}"] = dict_cands_l
+            self.step_d[f"step_{i}"] = dict_cands_l
             # loss might not be a good indicator, so I would log the new control whatever the loss is.
             # But in order to converge, we still use the last best control to optimize...
             runtime = time.time() - start
@@ -741,7 +742,11 @@ class MultiPromptAttack(object):
 
                 # model_tests = self.test_all()
                 model_tests = None
-                self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose, step_d = step_d)
+
+                if i == n_steps-1:
+                    self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose, step_d = self.step_d)
+                else:
+                    self.log(i+1+anneal_from, n_steps+anneal_from, self.control_str, best_loss, runtime, model_tests, verbose=verbose)
 
                 self.control_str = last_control
 

@@ -32,7 +32,7 @@
 				"--config.result_prefix=results/individual_behaviors_llama2_gcg_offset0",
 				"--config.n_train_data=10",
 				"--config.data_offset=0",
-				"--config.n_steps=1000",
+				"--config.n_steps=3",
 				"--config.test_steps=1",
 				"--config.batch_size=256",
 				"--config.multi_constant=0"

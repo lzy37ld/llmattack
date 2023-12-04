@@ -2,3 +2,4 @@ results*/
 *.out
 extracted*/
 *.pyc
+__pycache__/

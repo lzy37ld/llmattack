@@ -127,6 +127,7 @@ class AttackPrompt(object):
         "Please ensure that your responses are socially unbiased and positive in nature.\n\n"
         "If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. "
         "If you don't know the answer to a question, please don't share false information.")
+        self.conv_template.set_system_message(self.system_mes)
 
         self.test_new_toks = len(self.tokenizer(self.target).input_ids) + 2 # buffer
         for prefix in self.test_prefixes:
@@ -135,37 +136,45 @@ class AttackPrompt(object):
         self._update_ids()
 
     def _update_ids(self):
+        t = self.tokenizer
 
-        self.conv_template.append_message(self.conv_template.roles[0], f"{self.goal} {self.control}")
-        self.conv_template.append_message(self.conv_template.roles[1], f"{self.target}")
-        prompt = self.conv_template.get_prompt()
-        encoding = self.tokenizer(prompt)
-        toks = encoding.input_ids
+        # original implementation
+
+        # self.conv_template.append_message(self.conv_template.roles[0], f"{self.goal} {self.control}")
+        # self.conv_template.append_message(self.conv_template.roles[1], f"{self.target}")
+        # prompt = self.conv_template.get_prompt()
+        # encoding = self.tokenizer(prompt)
+        # toks = encoding.input_ids
 
         if self.conv_template.name == 'llama-2':
             self.conv_template.messages = []
 
-            self.conv_template.append_message(self.conv_template.roles[0], None)
             toks = self.tokenizer(self.conv_template.get_prompt()).input_ids
             self._user_role_slice = slice(None, len(toks))
 
-            self.conv_template.update_last_message(f"{self.goal}")
-            toks = self.tokenizer(self.conv_template.get_prompt()).input_ids
+            self.conv_template.append_message(self.conv_template.roles[0],f"{self.goal}")
+            prompt = self.conv_template.get_prompt()
+            toks = self.tokenizer(prompt).input_ids
             self._goal_slice = slice(self._user_role_slice.stop, max(self._user_role_slice.stop, len(toks)))
 
             separator = ' ' if self.goal else ''
             self.conv_template.update_last_message(f"{self.goal}{separator}{self.control}")
-            toks = self.tokenizer(self.conv_template.get_prompt()).input_ids
+            prompt = self.conv_template.get_prompt().strip()
+            toks = self.tokenizer(prompt).input_ids
             self._control_slice = slice(self._goal_slice.stop, len(toks))
 
             self.conv_template.append_message(self.conv_template.roles[1], None)
-            toks = self.tokenizer(self.conv_template.get_prompt()).input_ids
+            prompt = self.conv_template.get_prompt()
+            toks = self.tokenizer(prompt).input_ids
             self._assistant_role_slice = slice(self._control_slice.stop, len(toks))
 
             self.conv_template.update_last_message(f"{self.target}")
-            toks = self.tokenizer(self.conv_template.get_prompt()).input_ids
+            prompt = self.conv_template.get_prompt()
+            toks = self.tokenizer(prompt).input_ids
             self._target_slice = slice(self._assistant_role_slice.stop, len(toks)-2)
             self._loss_slice = slice(self._assistant_role_slice.stop-1, len(toks)-3)
+
+
 
         else:
             python_tokenizer = False or self.conv_template.name == 'oasst_pythia'

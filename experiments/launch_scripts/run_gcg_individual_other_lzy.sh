@@ -21,7 +21,6 @@ else
     echo "Folder '../results_n_steps_${n_steps}_multi_${multi_constant}' already exists."
 fi
 
-# n_steps=1000 is too time consuming.. try 100 first. Look at figure 2 in the paper
 python -u ../main.py \
     --config="../configs/individual_${model}.py" \
     --config.attack=gcg \

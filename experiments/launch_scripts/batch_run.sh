@@ -74,9 +74,3 @@ for i in $(seq 0 20 80)
 do
    sbatch run.slurm $i $multi_constant
 done
-
-
-# sbatch run.slurm 360 1
-# sbatch run.slurm 380 1
-# sbatch run_indiv.slurm 400 1
-# sbatch run_indiv.slurm 100 1

@@ -1591,7 +1591,7 @@ def get_workers(params, eval=False):
             tokenizer.unk_token_id = 0
             print("if 'guanaco' in params.tokenizer_paths[i]:")
         if 'Llama-2' in params.tokenizer_paths[i]:
-            tokenizer.pad_token = tokenizer.unk_token
+            tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = 'left'
             print("if 'Llama-2' in params.tokenizer_paths[i]:")
         if 'falcon' in params.tokenizer_paths[i]:

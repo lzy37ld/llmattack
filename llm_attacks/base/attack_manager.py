@@ -153,7 +153,7 @@ class AttackPrompt(object):
             self._user_role_slice = slice(None, len(toks))
 
             self.conv_template.append_message(self.conv_template.roles[0],f"{self.goal}")
-            prompt = self.conv_template.get_prompt()
+            prompt = self.conv_template.get_prompt().strip()
             toks = self.tokenizer(prompt).input_ids
             self._goal_slice = slice(self._user_role_slice.stop, max(self._user_role_slice.stop, len(toks)))
 

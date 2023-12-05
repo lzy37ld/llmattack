@@ -13,11 +13,11 @@ export setup=$2 # behaviors or strings
 export data_offset=$3
 export multi_constant=$4
 # Create results folder if it doesn't exist
-if [ ! -d "../results" ]; then
-    mkdir "../results"
-    echo "Folder '../results' created."
+if [ ! -d "../results_n_step_1000_multi_${multi_constant}" ]; then
+    mkdir "../results_n_step_1000_multi_${multi_constant}"
+    echo "Folder '../results_n_step_1000_multi_${multi_constant}' created."
 else
-    echo "Folder '../results' already exists."
+    echo "Folder '../results_n_step_1000_multi_${multi_constant}' already exists."
 fi
 
 # n_steps=1000 is too time consuming.. try 100 first. Look at figure 2 in the paper

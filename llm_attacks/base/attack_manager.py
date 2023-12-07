@@ -79,7 +79,6 @@ def get_nonascii_toks(tokenizer, device='cpu'):
         ascii_toks.append(tokenizer.unk_token_id)
     
     return torch.tensor(ascii_toks, device=device)
-
 class AttackPrompt(object):
     """
     A class used to generate an attack prompt. 
@@ -119,8 +118,9 @@ class AttackPrompt(object):
         self.control = control_init
         self.tokenizer = tokenizer
         self.conv_template = conv_template
-        self.test_prefixes = test_prefixes
         self.multi_constant = multi_constant
+        self.test_prefixes = test_prefixes
+
         self.conv_template.messages = []
 
         self.test_new_toks = len(self.tokenizer(self.target).input_ids) + 2 # buffer

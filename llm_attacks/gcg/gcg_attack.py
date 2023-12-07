@@ -69,6 +69,7 @@ def token_gradients(model, input_ids, input_slice, target_slice, loss_slice,test
     # add space! Due to it's generation.
     # test_prefixes = [" " + _ for _ in test_prefixes]
     loss = loss_1
+    print('multi_constant',multi_constant)
     if multi_constant > 0:
         safe_prefixes_tokens = t(test_prefixes,padding = "max_length",return_tensors="pt",add_special_tokens= False, max_length = targets.shape[0]).input_ids.to(targets.device)
         safe_prefixes_tokens[safe_prefixes_tokens == t.pad_token_id] = -100

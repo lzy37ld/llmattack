@@ -7,6 +7,7 @@
 #SBATCH --time 30:00:00               # maximum execution time (HH:MM:SS)
 #SBATCH --output=%x-%j.out           # output file name
 export offset=$1
+export multi_constant=$2
 
 
 # wrong
@@ -14,7 +15,11 @@ export offset=$1
 
 # correct
 # n_train_data=10
-srun --jobid $SLURM_JOBID bash -c 'bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset & bash run_gcg_individual_other_lzy.sh llama2 behaviors $((offset+10)) & wait'
+# srun --jobid $SLURM_JOBID bash -c 'bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset $multi_constant & bash run_gcg_individual_other_lzy.sh llama2 behaviors $((offset+10)) $multi_constant & bash run_gcg_individual_other_lzy.sh llama2 behaviors $((offset+20)) $multi_constant & bash run_gcg_individual_other_lzy.sh llama2 behaviors $((offset+30)) $multi_constant & wait'
+
+
+srun --jobid $SLURM_JOBID bash -c 'bash run_gcg_individual_other_lzy.sh llama2 behaviors $offset $multi_constant'
+
 
 
 # 一个 set n_train_data = 1

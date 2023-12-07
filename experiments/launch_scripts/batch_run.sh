@@ -7,27 +7,27 @@
 
 # for i in $(seq 440 10 510)
 # do
-#    sbatch run.slurm $i $multi_constant
+#    sbatch run.slurm $i
 # done
 
 # for i in $(seq 340 10 390)
 # do
-#    sbatch run.slurm $i $multi_constant
+#    sbatch run.slurm $i
 # done
 
 # for i in $(seq 240 10 290)
 # do
-#    sbatch run.slurm $i $multi_constant
+#    sbatch run.slurm $i
 # done
 
 # for i in $(seq 140 10 190)
 # do
-#    sbatch run.slurm $i $multi_constant
+#    sbatch run.slurm $i
 # done
 
 # for i in $(seq 40 10 90)
 # do
-#    sbatch run.slurm $i $multi_constant
+#    sbatch run.slurm $i
 # done
 
 
@@ -48,29 +48,28 @@
 
 
 
-multi_constant=1
 
-for i in $(seq 400 10 510)
+for i in $(seq 400 20 500)
 do
-   sbatch run.slurm $i $multi_constant
+   sbatch run.slurm $i
 done
 
-for i in $(seq 300 10 390)
+for i in $(seq 300 20 380)
 do
-   sbatch run.slurm $i $multi_constant
+   sbatch run.slurm $i
 done
 
-for i in $(seq 200 10 290)
+for i in $(seq 200 20 280)
 do
-   sbatch run.slurm $i $multi_constant
+   sbatch run.slurm $i
 done
 
-for i in $(seq 100 10 190)
+for i in $(seq 100 20 180)
 do
-   sbatch run.slurm $i $multi_constant
+   sbatch run.slurm $i
 done
 
-for i in $(seq 0 10 90)
+for i in $(seq 0 20 80)
 do
-   sbatch run.slurm $i $multi_constant
+   sbatch run.slurm $i
 done

@@ -73,3 +73,8 @@ for i in $(seq 0 20 80)
 do
    sbatch run.slurm $i
 done
+
+
+
+sbatch run_vicuna.slurm 0
+sbatch run_vicuna.slurm 1

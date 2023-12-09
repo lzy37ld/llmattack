@@ -137,6 +137,16 @@ class AttackPrompt(object):
         encoding = self.tokenizer(prompt)
         toks = encoding.input_ids
 
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+        print("should use fschat==0.2.20")
+
         if self.conv_template.name == 'llama-2':
             self.conv_template.messages = []
 

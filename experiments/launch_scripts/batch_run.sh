@@ -48,33 +48,28 @@
 
 
 
-
+n_steps=500
 for i in $(seq 400 20 500)
 do
-   sbatch run.slurm $i
+   sbatch run.slurm $i $n_steps
 done
 
 for i in $(seq 300 20 380)
 do
-   sbatch run.slurm $i
+   sbatch run.slurm $i $n_steps
 done
 
 for i in $(seq 200 20 280)
 do
-   sbatch run.slurm $i
+   sbatch run.slurm $i $n_steps
 done
 
 for i in $(seq 100 20 180)
 do
-   sbatch run.slurm $i
+   sbatch run.slurm $i $n_steps
 done
 
 for i in $(seq 0 20 80)
 do
-   sbatch run.slurm $i
+   sbatch run.slurm $i $n_steps
 done
-
-
-
-sbatch run_vicuna.slurm 0
-sbatch run_vicuna.slurm 1

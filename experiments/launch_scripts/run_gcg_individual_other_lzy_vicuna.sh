@@ -12,7 +12,7 @@ export model=$1 # llama2 or vicuna
 export setup=$2 # behaviors or strings
 export data_offset=$3
 
-n_steps=500
+n_steps=1000
 # Create results folder if it doesn't exist
 if [ ! -d "../results_n_steps_${n_steps}" ]; then
     mkdir "../results_n_steps_${n_steps}"

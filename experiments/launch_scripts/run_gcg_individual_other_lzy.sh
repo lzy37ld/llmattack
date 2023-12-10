@@ -16,18 +16,18 @@ export n_steps=$4
 
 # Create results folder if it doesn't exist
 
-if [ ! -d "../results_n_steps_${n_steps}" ]; then
-    mkdir "../results_n_steps_${n_steps}"
-    echo "Folder '../results_n_steps_${n_steps}' created."
+if [ ! -d "../results_n_steps_${n_steps}_${model}" ]; then
+    mkdir "../results_n_steps_${n_steps}_${model}"
+    echo "Folder '../results_n_steps_${n_steps}_${model}' created."
 else
-    echo "Folder '../results_n_steps_${n_steps}' already exists."
+    echo "Folder '../results_n_steps_${n_steps}_${model}' already exists."
 fi
 
 python -u ../main.py \
     --config="../configs/individual_${model}.py" \
     --config.attack=gcg \
     --config.train_data="../../data/advbench/harmful_${setup}.csv" \
-    --config.result_prefix="../results_n_steps_${n_steps}/individual_${setup}_${model}_gcg_offset${data_offset}" \
+    --config.result_prefix="../results_n_steps_${n_steps}_${model}/individual_${setup}_${model}_gcg_offset${data_offset}" \
     --config.n_train_data=10 \
     --config.data_offset=$data_offset \
     --config.n_steps=$n_steps \

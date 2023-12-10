@@ -7,6 +7,8 @@ from absl import app
 from ml_collections import config_flags
 
 from llm_attacks import get_goals_and_targets, get_workers
+from accelerate.utils import set_seed
+set_seed(42)
 
 _CONFIG = config_flags.DEFINE_config_file('config')
 

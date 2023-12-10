@@ -13,7 +13,7 @@
 			"justMyCode": true
 		},
 		{
-			"name": "attack",
+			"name": "attack-llama2-chat",
 			"type": "python",
 			"request": "launch",
 			"program": "${file}",
@@ -26,16 +26,41 @@
 				"CUDA_VISIBLE_DEVICES": "2"
 			},
 			"args": [
-				"--config=configs/individual_llama2.py",
+				"--config=configs/individual_llama2-chat.py",
 				"--config.attack=gcg",
 				"--config.train_data=../data/advbench/harmful_behaviors.csv",
-				"--config.result_prefix=results/individual_behaviors_llama2_gcg_offset0",
+				"--config.result_prefix=results/individual_behaviors_llama2-chat_gcg_offset0",
 				"--config.n_train_data=10",
 				"--config.data_offset=0",
 				"--config.n_steps=3",
 				"--config.test_steps=1",
 				"--config.batch_size=256",
 				"--config.multi_constant=0"
+			]
+		},
+		{
+			"name": "attack-vicuna",
+			"type": "python",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": false,
+			"cwd": "/home/liao.629/llm-attacks/experiments",
+			"env": {
+				"WANDB_MODE": "disabled",
+				"CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+				"CUDA_VISIBLE_DEVICES": "2"
+			},
+			"args": [
+				"--config=configs/individual_vicuna.py",
+				"--config.attack=gcg",
+				"--config.train_data=../data/advbench/harmful_behaviors.csv",
+				"--config.result_prefix=results/individual_behaviors_vicuna_gcg_offset0",
+				"--config.n_train_data=1",
+				"--config.data_offset=0",
+				"--config.n_steps=3",
+				"--config.test_steps=1",
+				"--config.batch_size=256",
 			]
 		}
 	]

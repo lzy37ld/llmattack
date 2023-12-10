@@ -137,52 +137,42 @@ class AttackPrompt(object):
         encoding = self.tokenizer(prompt)
         toks = encoding.input_ids
 
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-        print("should use fschat==0.2.20")
-
         if self.conv_template.name == 'llama-2':
             self.conv_template.messages = []
             self.conv_template.set_system_message("You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.")
 
             self.conv_template.append_message(self.conv_template.roles[0], None)
-            print("*"*50)
-            print(self.conv_template.get_prompt().rsplit("[INST]",1)[0])
+            # print("*"*50)
+            # print(self.conv_template.get_prompt().rsplit("[INST]",1)[0])
             toks = self.tokenizer(self.conv_template.get_prompt().rsplit("[INST]",1)[0]).input_ids
             self._user_role_slice = slice(None, len(toks))
 
             self.conv_template.update_last_message(f"{self.goal}")
-            print("*"*50)
-            print(self.conv_template.get_prompt().strip())
+            # print("*"*50)
+            # print(self.conv_template.get_prompt().strip())
             toks = self.tokenizer(self.conv_template.get_prompt().strip()).input_ids
             self._goal_slice = slice(self._user_role_slice.stop, max(self._user_role_slice.stop, len(toks)))
 
             separator = ' ' if self.goal else ''
             self.conv_template.update_last_message(f"{self.goal}{separator}{self.control}")
-            print("*"*50)
-            print(self.conv_template.get_prompt().strip())
+            # print("*"*50)
+            # print(self.conv_template.get_prompt().strip())
             toks = self.tokenizer(self.conv_template.get_prompt().strip()).input_ids
             self._control_slice = slice(self._goal_slice.stop, len(toks))
-            print("*"*50)
+            # print("*"*50)
             print(self.tokenizer.decode(toks[self._goal_slice]))
             print(self.tokenizer.decode(toks[self._control_slice]))
-            print("*"*50)
+            # print("*"*50)
 
             self.conv_template.append_message(self.conv_template.roles[1], None)
-            print("*"*50)
-            print(self.conv_template.get_prompt().strip())
+            # print("*"*50)
+            # print(self.conv_template.get_prompt().strip())
             toks = self.tokenizer(self.conv_template.get_prompt().strip()).input_ids
             self._assistant_role_slice = slice(self._control_slice.stop, len(toks))
 
             self.conv_template.update_last_message(f"{self.target}")
-            print("*"*50)
-            print(self.conv_template.get_prompt().strip())
+            # print("*"*50)
+            # print(self.conv_template.get_prompt().strip())
             toks = self.tokenizer(self.conv_template.get_prompt().strip()).input_ids
             self._target_slice = slice(self._assistant_role_slice.stop, len(toks)-2)
             self._loss_slice = slice(self._assistant_role_slice.stop-1, len(toks)-3)
@@ -1629,6 +1619,8 @@ def get_workers(params, eval=False):
         if 'falcon' in params.tokenizer_paths[i]:
             tokenizer.padding_side = 'left'
             print("if 'falcon' in params.tokenizer_paths[i]:")
+        if "vicuna" in params.tokenizer_paths[i]:
+            tokenizer.padding_side = 'left'
         if not tokenizer.pad_token:
             tokenizer.pad_token = tokenizer.eos_token
         tokenizers.append(tokenizer)

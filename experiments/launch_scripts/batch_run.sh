@@ -48,59 +48,65 @@
 
 
 
-# n_steps=500
-# for i in $(seq 400 20 500)
-# do
-#    sbatch run.slurm $i $n_steps
-# done
-
-# for i in $(seq 300 20 380)
-# do
-#    sbatch run.slurm $i $n_steps
-# done
-
-# for i in $(seq 200 20 280)
-# do
-#    sbatch run.slurm $i $n_steps
-# done
-
-# for i in $(seq 100 20 180)
-# do
-#    sbatch run.slurm $i $n_steps
-# done
-
-# for i in $(seq 0 20 80)
-# do
-#    sbatch run.slurm $i $n_steps
-# done
-
-
-
-
-
-
-n_steps=500
+n_steps=1000
 for i in $(seq 400 20 500)
 do
-   sbatch run_vicuna.slurm $i $n_steps
+   sbatch run_llama-chat.slurm $i $n_steps
 done
 
 for i in $(seq 300 20 380)
 do
-   sbatch run_vicuna.slurm $i $n_steps
+   sbatch run_llama-chat.slurm $i $n_steps
 done
 
 for i in $(seq 200 20 280)
 do
-   sbatch run_vicuna.slurm $i $n_steps
+   sbatch run_llama-chat.slurm $i $n_steps
 done
 
 for i in $(seq 100 20 180)
 do
-   sbatch run_vicuna.slurm $i $n_steps
+   sbatch run_llama-chat.slurm $i $n_steps
 done
 
 for i in $(seq 0 20 80)
 do
-   sbatch run_vicuna.slurm $i $n_steps
+   sbatch run_llama-chat.slurm $i $n_steps
 done
+
+
+
+
+
+
+# n_steps=500
+# for i in $(seq 400 20 500)
+# do
+#    sbatch run_vicuna.slurm $i $n_steps
+# done
+
+# for i in $(seq 300 20 380)
+# do
+#    sbatch run_vicuna.slurm $i $n_steps
+# done
+
+# for i in $(seq 200 20 280)
+# do
+#    sbatch run_vicuna.slurm $i $n_steps
+# done
+
+# for i in $(seq 100 20 180)
+# do
+#    sbatch run_vicuna.slurm $i $n_steps
+# done
+
+# for i in $(seq 0 20 80)
+# do
+#    sbatch run_vicuna.slurm $i $n_steps
+# done
+
+
+# sbatch run_indiv.slurm 150 1000
+# sbatch run_indiv.slurm 220 1000
+# sbatch run_indiv.slurm 230 1000
+# sbatch run_indiv.slurm 350 1000
